@@ -9,7 +9,7 @@ st.cache_data.clear()
 st.cache_resource.clear() 
 
 def dashboard():
-    df = pd.read_csv("df_churn_cleaned.csv")
+    df = pd.read_csv('df_churn_cleaned.csv', sep='\t')
     df["Exited"] = df["Exited"].replace({0: "No Churn", 1: "Churn"})
 
     st.sidebar.header("🔍 Filter Options")
