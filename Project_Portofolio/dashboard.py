@@ -1,7 +1,6 @@
 
 import streamlit as st
 import pandas as pd
-import numpy as np
 import plotly.express as px
 
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
@@ -9,7 +8,7 @@ st.cache_data.clear()
 st.cache_resource.clear() 
 
 def dashboard():
-    df = pd.read_csv('df_churn_cleaned.csv', sep='\t')
+    df = pd.read_csv("df_churn_cleaned.csv")
     df["Exited"] = df["Exited"].replace({0: "No Churn", 1: "Churn"})
 
     st.sidebar.header("🔍 Filter Options")
