@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import joblib
 import plotly.express as px
 import plotly.graph_objects as go
@@ -7,7 +8,7 @@ import plotly.graph_objects as go
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
 st.cache_resource.clear() 
-
+@st.cache_data
 def prediction():
     st.title("Churn Prediction")
     st.write("Enter customer data to predict the likelihood of churn.")

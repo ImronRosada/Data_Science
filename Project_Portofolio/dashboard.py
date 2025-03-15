@@ -1,12 +1,13 @@
 
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.express as px
 
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
 st.cache_resource.clear() 
-
+@st.cache_data
 def dashboard():
     st.title("Dashboard")
 
