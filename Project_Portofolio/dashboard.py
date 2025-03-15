@@ -7,10 +7,8 @@ import plotly.express as px
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
 st.cache_resource.clear() 
-@st.cache_data
-def dashboard():
-    st.title("Dashboard")
 
+def dashboard():
     df = pd.read_csv("df_churn_cleaned.csv")
     df["Exited"] = df["Exited"].replace({0: "No Churn", 1: "Churn"})
 
