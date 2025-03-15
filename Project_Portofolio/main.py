@@ -1,5 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
+import os
+print(os.listdir()) 
 
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
