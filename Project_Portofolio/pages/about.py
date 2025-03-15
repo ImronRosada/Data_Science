@@ -1,8 +1,10 @@
+import os
 import streamlit as st
 from PIL import Image
 
 def about_me():
-    image = Image.open("file/background.jpg").convert("RGBA")
+    image_path = os.path.join(os.getcwd(), 'file', 'background.jpg')
+    image = Image.open(image_path).convert("RGBA")
     st.image(image, width=200)
 
     st.title("About Me")
