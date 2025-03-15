@@ -1,5 +1,9 @@
 import streamlit as st
 
+# Clear Streamlit cache (you can clear cache programmatically here if needed)
+st.cache_data.clear()
+st.cache_resource.clear() 
+
 def contact_me():
 
     st.subheader("Let's Get in Touch! 🌟")

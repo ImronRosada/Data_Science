@@ -4,6 +4,10 @@ import joblib
 import plotly.express as px
 import plotly.graph_objects as go
 
+# Clear Streamlit cache (you can clear cache programmatically here if needed)
+st.cache_data.clear()
+st.cache_resource.clear() 
+
 def prediction():
     st.title("Churn Prediction")
     st.write("Enter customer data to predict the likelihood of churn.")
@@ -12,8 +16,8 @@ def prediction():
     uploaded_file = st.sidebar.file_uploader("Upload CSV (optional)", type=["csv"], help="Ensure the CSV format matches the training dataset. The column names should be the same to avoid errors.")
 
     # Load the model and reference dataset to ensure column order
-    model = joblib.load("models/xgboost_model.pkl")
-    df_ref = pd.read_csv("dataset/df_churn_processed.csv")
+    model = joblib.load("xgboost_model.pkl")
+    df_ref = pd.read_csv("df_churn_processed.csv")
     expected_cols = [col for col in df_ref.columns.tolist() if col != "Exited"] # exclude the target feature
 
     # Initialize session state to store input history

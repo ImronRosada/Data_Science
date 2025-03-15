@@ -1,9 +1,14 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 
+# Clear Streamlit cache (you can clear cache programmatically here if needed)
+st.cache_data.clear()
+st.cache_resource.clear() 
+
+# Set page config
 st.set_page_config(page_title="Portofolio", page_icon="📌", layout="centered")
 
-# Sidebar Navigation with simple hover effect
+# Sidebar menu using option_menu
 with st.sidebar:
     st.title("Navigation")
     menu = option_menu(
@@ -17,18 +22,18 @@ with st.sidebar:
         }
     )
 
-# Display Content based on Sidebar menu selection
+# Display content based on sidebar menu selection
 if menu == "About Me":
-    from pages import about
+    import about
     about.about_me()
 elif menu == "Dashboard":
-    from pages import dashboard
+    import dashboard
     dashboard.dashboard()
 elif menu == "Prediction":
-    from pages import prediction
+    import prediction
     prediction.prediction()
 elif menu == "Contact Me":
-    from pages import contact
+    import contact
     contact.contact_me()
 
 # Add some interactivity by displaying a welcome message or a footer message

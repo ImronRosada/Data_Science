@@ -1,8 +1,12 @@
 import streamlit as st
 from PIL import Image
 
+# Clear Streamlit cache (you can clear cache programmatically here if needed)
+st.cache_data.clear()
+st.cache_resource.clear() 
+
 def about_me():
-    image = Image.open("file/background.jpg").convert("RGBA")
+    image = Image.open("background.jpg").convert("RGBA")
     st.image(image, width=200)
 
     st.title("About Me")
