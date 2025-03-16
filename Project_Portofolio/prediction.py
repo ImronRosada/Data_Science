@@ -4,9 +4,9 @@ import numpy as np
 import joblib
 import plotly.express as px
 import plotly.graph_objects as go
-import os
-st.write("Current working directory:", os.getcwd())
-st.write("Files in cwd:", os.listdir())
+# import os
+# st.write("Current working directory:", os.getcwd())
+# st.write("Files in cwd:", os.listdir())
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
 st.cache_resource.clear() 
@@ -19,8 +19,8 @@ def prediction():
     uploaded_file = st.sidebar.file_uploader("Upload CSV (optional)", type=["csv"], help="Ensure the CSV format matches the training dataset. The column names should be the same to avoid errors.")
 
     # Load the model and reference dataset to ensure column order
-    model = joblib.load("xgboost_model.pkl")
-    df_ref = pd.read_csv("df_churn_processed.csv")
+    model = joblib.load("Project_Portofolio/xgboost_model.pkl")
+    df_ref = pd.read_csv("Project_Portofolio/df_churn_processed.csv")
     expected_cols = [col for col in df_ref.columns.tolist() if col != "Exited"] # exclude the target feature
 
     # Initialize session state to store input history
