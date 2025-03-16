@@ -4,7 +4,9 @@ import numpy as np
 import joblib
 import plotly.express as px
 import plotly.graph_objects as go
-
+import os
+st.write("Current working directory:", os.getcwd())
+st.write("Files in cwd:", os.listdir())
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
 st.cache_resource.clear() 
