@@ -10,6 +10,7 @@ st.cache_data.clear()
 st.cache_resource.clear() 
 
 def dashboard():
+    st.title("Dashboard")    
     df = pd.read_csv("Project_Portofolio/df_churn_cleaned.csv")
     df["Exited"] = df["Exited"].replace({0: "No Churn", 1: "Churn"})
 
