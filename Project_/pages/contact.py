@@ -18,3 +18,6 @@ def contact_me():
         st.write("For a more direct conversation, you can contact me via WhatsApp or explore my work on GitHub!")
         st.write("📱 **WhatsApp :** [Chat with me on WhatsApp](https://wa.me/6281220631122)")
         st.write("📂 **GitHub   :** [Explore my projects on GitHub](https://github.com/ImronRosada/)")
+
+if __name__ == "__main__":
+    contact_me()

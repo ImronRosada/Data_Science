@@ -11,7 +11,7 @@ st.cache_resource.clear()
 
 def dashboard_churn():
     st.title("Customer Churn Dashboard")    
-    df = pd.read_csv("dataset/df_churn_cleaned.csv")
+    df = pd.read_csv("Project_/dataset/df_churn_cleaned.csv")
     df["Exited"] = df["Exited"].replace({0: "No Churn", 1: "Churn"})
 
     st.sidebar.header("🔍 Filter Options")

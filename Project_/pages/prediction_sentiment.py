@@ -42,7 +42,7 @@ def prediction_sentiment():
     tab1, tab2 = st.tabs(["📊 Default Data", "✍️ Manual Input"])
 
     with tab1:
-        file_path = "dataset/ticket_system_review_processed.csv"
+        file_path = "Project_/dataset/ticket_system_review_processed.csv"
 
         if not os.path.exists(file_path):
             st.error(f"Dataset not found: {file_path}")

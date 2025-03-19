@@ -14,7 +14,7 @@ def dashboard_sentiment():
     st.title("Customer Satisfaction Dashboard")
     
     # Load dataset
-    df = pd.read_csv("dataset/ticket_system_review.csv", parse_dates=["date_of_survey"])
+    df = pd.read_csv("Project_/dataset/ticket_system_review.csv", parse_dates=["date_of_survey"])
     
     # Create 'fill_survey' column
     df['fill_survey'] = np.where(df['overall_rating'].isnull(), 'Not Responded', 'Responded')

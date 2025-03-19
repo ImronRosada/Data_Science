@@ -17,8 +17,8 @@ def prediction_churn():
     st.info("Model Prediction using **XGBoost**")
 
     # Load the model and reference dataset to ensure column order
-    model = joblib.load("models/xgboost_model.pkl")
-    df_ref = pd.read_csv("dataset/df_churn_processed.csv")
+    model = joblib.load("Project_/models/xgboost_model.pkl")
+    df_ref = pd.read_csv("Project_/dataset/df_churn_processed.csv")
     expected_cols = [col for col in df_ref.columns.tolist() if col != "Exited"]
 
     # Initialize session state to store input history
