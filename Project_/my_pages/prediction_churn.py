@@ -112,12 +112,15 @@ def prediction_churn():
     
     # Display input history
     st.markdown("#### Input History")
-    if st.session_state.history:
+    if st.session_state.get("history"):  
         history_df = pd.concat(st.session_state.history, ignore_index=True)
-        st.dataframe(history_df)
     else:
-        st.write("No input history yet.")
-    
+        history_df = pd.DataFrame()
+    if not history_df.empty:  
+        st.dataframe(history_df)  
+    else:
+        st.info("No history available.") 
+
     if st.button("🔄 Reset History"):
         st.session_state.history = []
         st.rerun()
