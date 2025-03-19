@@ -1,9 +1,13 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-from pages import about, contact, dashboard_churn, dashboard_sentiment, prediction_churn, prediction_sentiment
-
+from my_pages import about, contact, dashboard_churn, dashboard_sentiment, prediction_churn, prediction_sentiment
 st.set_page_config(page_title="Portofolio", page_icon="📌", layout="centered")
-
+# import os
+# st.write("Current working directory:", os.getcwd())
+# st.write("Files in cwd:", os.listdir())
+# Clear Streamlit cache (you can clear cache programmatically here if needed)
+st.cache_data.clear()
+st.cache_resource.clear() 
 with st.sidebar:
     st.title("Navigation")
     
