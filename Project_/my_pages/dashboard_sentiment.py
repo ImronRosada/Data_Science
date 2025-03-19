@@ -63,7 +63,7 @@ def dashboard_sentiment():
                  nps_agg[nps_agg['nps_category'] == 'Detractor']['count'].sum()) / responded_customer.shape[0] * 100 if responded_customer.shape[0] > 0 else 0
 
     # Tabs
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["🔄 Overview", "📊 NPS Metrics", "📊 CSAT & CES", "📉 Score Over Time", "📝 Survey by Ticket", "📆 Survey by Date"])
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["📊 Overview", "📊 NPS Metrics", "📊 CSAT & CES", "📉 Score Over Time", "📝 Survey by Ticket", "📆 Survey by Date"])
     
     with tab1:
         st.subheader("Survey Response")

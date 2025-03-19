@@ -24,7 +24,7 @@ def dashboard_churn():
     if geo_filter != "All":
         filtered_df = filtered_df[filtered_df["Geography"] == geo_filter]
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["🔄 Overview", "👥 Customer Characteristics", "📅 Age & Tenure", "💰 Financial Factors", "🏦 Finance & Activity"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Overview", "👥 Customer Characteristics", "📅 Age & Tenure", "💰 Financial Factors", "🏦 Finance & Activity"])
     
     with tab1:
         st.subheader("Churn Status Distribution")
