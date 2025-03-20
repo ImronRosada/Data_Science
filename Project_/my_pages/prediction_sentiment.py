@@ -48,9 +48,12 @@ def prediction_sentiment():
 
     if "history" not in st.session_state:
         st.session_state["history"] = []
-    
+
     if "manual_history" not in st.session_state:
         st.session_state["manual_history"] = []
+
+    if "show_reset_button" not in st.session_state:
+        st.session_state["show_reset_button"] = False
 
     with tab1:
         file_path = "Project_/dataset/ticket_system_review_processed.csv"
@@ -75,7 +78,10 @@ def prediction_sentiment():
 
         df = df[df["overall_text"].str.strip() != ""]
 
+        selected_reviews = []
+
         def sentiment_tab_ui(sentiment_label):
+            nonlocal selected_reviews
             filtered_df = df[df["predicted_sentiment"] == sentiment_label]
 
             if filtered_df.empty:
@@ -87,7 +93,6 @@ def prediction_sentiment():
             selected_reviews = st.multiselect(
                 f"Select reviews with {sentiment_label} sentiment:",
                 filtered_df["overall_text"].unique(),
-                help="Choose reviews from the dataset for sentiment analysis.",
             )
 
             if selected_reviews:
@@ -95,14 +100,7 @@ def prediction_sentiment():
                     sentiment_result = predict_vader(review)
                     if {"Review": review, "Sentiment": sentiment_result} not in st.session_state["history"]:
                         st.session_state["history"].append({"Review": review, "Sentiment": sentiment_result})
-
-            if st.session_state["history"]:
-                if st.button(f"🔄 Reset History"):
-                    if selected_reviews:
-                        st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
-                    else:
-                        st.session_state["history"] = []
-                        st.rerun()
+                        st.session_state["show_reset_button"] = True
 
         tab_pos, tab_neu, tab_neg = st.tabs(["😀 Positive", "😐 Neutral", "😡 Negative"])
 
@@ -117,7 +115,6 @@ def prediction_sentiment():
 
         if st.session_state["history"]:
             st.markdown("#### Prediction Results")
-
             history_df = pd.DataFrame(st.session_state["history"])
 
             if not history_df.empty:
@@ -129,12 +126,19 @@ def prediction_sentiment():
                 st.markdown("#### Prediction History")
                 st.dataframe(history_df, use_container_width=True)
 
+                if selected_reviews:
+                    st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
+                elif st.session_state["show_reset_button"]:
+                    if st.button("🔄 Reset History"):
+                        st.session_state["history"] = []
+                        st.session_state["show_reset_button"] = False
+                        st.rerun()
+
     with tab2:
         review_text = st.text_area(
             "Enter your review here:",
             "",
             placeholder="Only English text is supported.",
-            help="Type a review for sentiment prediction.",
         )
 
         if st.button("🔮 Predict"):
@@ -145,6 +149,7 @@ def prediction_sentiment():
 
                 if {"Review": review_text, "Sentiment": sentiment_result} not in st.session_state["manual_history"]:
                     st.session_state["manual_history"].append({"Review": review_text, "Sentiment": sentiment_result})
+                    st.session_state["show_reset_button"] = True
             else:
                 st.warning("⚠️ Please enter a review before predicting.")
 
@@ -153,9 +158,10 @@ def prediction_sentiment():
             manual_df = pd.DataFrame(st.session_state["manual_history"])
             st.dataframe(manual_df, use_container_width=True)
 
-            if st.session_state["manual_history"]:
+            if st.session_state["show_reset_button"]:
                 if st.button("🔄 Reset History"):
                     st.session_state["manual_history"] = []
+                    st.session_state["show_reset_button"] = False
                     st.rerun()
 
 if __name__ == "__main__":
