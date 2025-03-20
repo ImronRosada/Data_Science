@@ -10,22 +10,27 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
 st.cache_resource.clear()
-# Download lexicon
+
+# Download lexicon untuk analisis sentimen
 nltk.download("vader_lexicon")
 
+# Inisialisasi model VADER
 vader_model = SentimentIntensityAnalyzer()
 
+# Fungsi membersihkan teks
 def cleansing_text(text):
     text = re.sub(r"\s+", " ", text).strip()
     text = re.sub(r"http\S+|www\S+", "http", text)
     text = re.sub(r"@\S+", "@user", text)
     return text
 
+# Fungsi prediksi sentimen menggunakan VADER
 def predict_vader(text):
     score = vader_model.polarity_scores(text)
     compound = score["compound"]
     return "Positive" if compound >= 0.05 else "Negative" if compound <= -0.05 else "Neutral"
 
+# Menampilkan hasil prediksi dengan ikon emosi
 def show_prediction_result(sentiment):
     if sentiment == "Positive":
         st.success(f"**Prediction Result:** {sentiment} 😀")
@@ -34,6 +39,7 @@ def show_prediction_result(sentiment):
     else:
         st.error(f"**Prediction Result:** {sentiment} 😡")
 
+# Fungsi utama untuk prediksi sentimen
 def prediction_sentiment():
     st.title("Sentiment Prediction")
     st.info("Model Prediction using **VADER** (lexicon-based)")
@@ -48,9 +54,6 @@ def prediction_sentiment():
 
     if "show_reset_button" not in st.session_state:
         st.session_state["show_reset_button"] = False
-
-    if "selected_reviews" not in st.session_state:
-        st.session_state["selected_reviews"] = []
 
     with tab1:
         file_path = "Project_/dataset/ticket_system_review_processed.csv"
@@ -75,7 +78,10 @@ def prediction_sentiment():
 
         df = df[df["overall_text"].str.strip() != ""]
 
+        selected_reviews = []
+
         def sentiment_tab_ui(sentiment_label):
+            nonlocal selected_reviews
             filtered_df = df[df["predicted_sentiment"] == sentiment_label]
 
             if filtered_df.empty:
@@ -84,15 +90,13 @@ def prediction_sentiment():
 
             st.dataframe(filtered_df[["overall_text"]], height=300)
 
-            available_reviews = filtered_df["overall_text"].unique().tolist()
-            st.session_state["selected_reviews"] = st.multiselect(
+            selected_reviews = st.multiselect(
                 f"Select reviews with {sentiment_label} sentiment:",
-                available_reviews,
-                default=[review for review in st.session_state["selected_reviews"] if review in available_reviews]
+                filtered_df["overall_text"].unique(),
             )
 
-            if st.session_state["selected_reviews"]:
-                for review in st.session_state["selected_reviews"]:
+            if selected_reviews:
+                for review in selected_reviews:
                     sentiment_result = predict_vader(review)
                     if {"Review": review, "Sentiment": sentiment_result} not in st.session_state["history"]:
                         st.session_state["history"].append({"Review": review, "Sentiment": sentiment_result})
@@ -122,13 +126,12 @@ def prediction_sentiment():
                 st.markdown("#### Prediction History")
                 st.dataframe(history_df, use_container_width=True)
 
-                if st.session_state["selected_reviews"]:
+                if selected_reviews:
                     st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
                 elif st.session_state["show_reset_button"]:
-                    if st.button("🔄 Reset History"):
+                    if st.button("🔄 Reset History", help="If the reset button doesn't work, deselect all selected reviews first."):
                         st.session_state["history"] = []
                         st.session_state["show_reset_button"] = False
-                        st.session_state["selected_reviews"] = []
                         st.rerun()
 
     with tab2:
