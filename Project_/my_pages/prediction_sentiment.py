@@ -9,7 +9,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 # st.write("Files in cwd:", os.listdir())
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
-st.cache_resource.clear() 
+st.cache_resource.clear()
 
 # Download lexicon untuk analisis sentimen
 nltk.download("vader_lexicon")
@@ -30,7 +30,7 @@ def predict_vader(text):
     compound = score["compound"]
     return "Positive" if compound >= 0.05 else "Negative" if compound <= -0.05 else "Neutral"
 
-# Menampilkan hasil prediksi
+# Menampilkan hasil prediksi dengan ikon emosi
 def show_prediction_result(sentiment):
     if sentiment == "Positive":
         st.success(f"**Prediction Result:** {sentiment} 😀")
@@ -45,6 +45,13 @@ def prediction_sentiment():
     st.info("Model Prediction using **VADER** (lexicon-based)")
 
     tab1, tab2 = st.tabs(["📊 Default Data", "✍️ Manual Input"])
+
+    # **Pastikan session state history ada**
+    if "history" not in st.session_state:
+        st.session_state["history"] = []
+    
+    if "manual_history" not in st.session_state:
+        st.session_state["manual_history"] = []
 
     # Tab pertama: Menggunakan dataset default
     with tab1:
@@ -72,11 +79,7 @@ def prediction_sentiment():
         # Hapus baris dengan teks kosong
         df = df[df["overall_text"].str.strip() != ""]
 
-        # Inisialisasi session state untuk riwayat prediksi
-        if "history" not in st.session_state:
-            st.session_state["history"] = []
-
-        # Fungsi untuk membuat UI per kategori sentimen
+        # Fungsi untuk UI berdasarkan kategori sentimen
         def sentiment_tab_ui(sentiment_label):
             filtered_df = df[df["predicted_sentiment"] == sentiment_label]
 
@@ -95,9 +98,9 @@ def prediction_sentiment():
             if selected_reviews:
                 for review in selected_reviews:
                     sentiment_result = predict_vader(review)
-                    st.session_state["history"].append(
-                        {"Review": review, "Sentiment": sentiment_result}
-                    )
+                    # **Cegah duplikasi dalam history**
+                    if {"Review": review, "Sentiment": sentiment_result} not in st.session_state["history"]:
+                        st.session_state["history"].append({"Review": review, "Sentiment": sentiment_result})
 
         # Menampilkan data berdasarkan sentimen
         tab_pos, tab_neu, tab_neg = st.tabs(["😀 Positive", "😐 Neutral", "😡 Negative"])
@@ -111,15 +114,11 @@ def prediction_sentiment():
         with tab_neg:
             sentiment_tab_ui("Negative")
 
-        # Menampilkan hasil prediksi
+        # **Menampilkan history hanya jika ada data**
         if st.session_state["history"]:
             st.markdown("#### Prediction Results")
 
-            # **Perbaikan:** Pastikan ada data sebelum membuat DataFrame
-            if st.session_state["history"]:
-                history_df = pd.DataFrame(st.session_state["history"])
-            else:
-                history_df = pd.DataFrame(columns=["Review", "Sentiment"])
+            history_df = pd.DataFrame(st.session_state["history"]) if st.session_state["history"] else pd.DataFrame(columns=["Review", "Sentiment"])
 
             if not history_df.empty:
                 sentiment_counts = history_df["Sentiment"].value_counts().reset_index()
@@ -139,24 +138,23 @@ def prediction_sentiment():
         review_text = st.text_area(
             "Enter your review here:",
             "",
-            placeholder="Only text English is supported.",
+            placeholder="Only English text is supported.",
             help="Type a review for sentiment prediction.",
         )
-
-        if "manual_history" not in st.session_state:
-            st.session_state["manual_history"] = []
 
         if st.button("🔮 Predict"):
             if review_text.strip():
                 clean_text = cleansing_text(review_text)
                 sentiment_result = predict_vader(clean_text)
                 show_prediction_result(sentiment_result)
-                st.session_state["manual_history"].append(
-                    {"Review": review_text, "Sentiment": sentiment_result}
-                )
+
+                # **Cegah duplikasi dalam manual history**
+                if {"Review": review_text, "Sentiment": sentiment_result} not in st.session_state["manual_history"]:
+                    st.session_state["manual_history"].append({"Review": review_text, "Sentiment": sentiment_result})
             else:
                 st.warning("⚠️ Please enter a review before predicting.")
 
+        # **Tampilkan history manual hanya jika ada data**
         if st.session_state["manual_history"]:
             st.markdown("#### Manual Input History")
             manual_df = pd.DataFrame(st.session_state["manual_history"])
