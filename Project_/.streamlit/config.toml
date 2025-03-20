@@ -3,3 +3,6 @@ showSidebarNavigation = false
 
 [server]
 folderWatchBlacklist = ["pages"]
+
+[theme]
+base="light"
