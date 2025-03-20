@@ -102,6 +102,13 @@ def prediction_sentiment():
                     if {"Review": review, "Sentiment": sentiment_result} not in st.session_state["history"]:
                         st.session_state["history"].append({"Review": review, "Sentiment": sentiment_result})
 
+            if st.button(f"🔄 Reset {sentiment_label} Predictions"):
+                if selected_reviews:
+                    st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
+                else:
+                    st.session_state["history"] = []
+                    st.rerun()
+
         # Menampilkan data berdasarkan sentimen
         tab_pos, tab_neu, tab_neg = st.tabs(["😀 Positive", "😐 Neutral", "😡 Negative"])
 
@@ -129,7 +136,7 @@ def prediction_sentiment():
                 st.markdown("#### Prediction History")
                 st.dataframe(history_df, use_container_width=True)
 
-                if st.button("🔄 Reset Predictions"):
+                if st.button("🔄 Reset History"):
                     st.session_state["history"] = []
                     st.rerun()
 
