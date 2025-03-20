@@ -24,13 +24,13 @@ def prediction_churn():
     # Initialize session state to store input history
     if "history" not in st.session_state:
         st.session_state.history = []
-    
+
     st.markdown("### Customer Data Input")
     st.info("Please fill in the data below according to the instructions.")
 
     row1 = st.columns(5)
     row2 = st.columns(5)
-    
+
     # First row: 5 inputs 
     has_cr_card = row1[0].selectbox("Has Credit Card?", ["Yes", "No"], help="Select 'Yes' if the customer has a credit card.")
     credit_score = row1[1].slider("Credit Score", 300, 900, 650, help="The customer's credit score (300-900).")
@@ -61,15 +61,15 @@ def prediction_churn():
         "Gender_Female": [1 if gender == "Female" else 0],
         "Gender_Male": [1 if gender == "Male" else 0]
     })
-    
+
     st.markdown("#### Input Data Summary")
     st.dataframe(raw_input)
-    
+
     # Ensure all features from the training dataset are present
     for col in expected_cols:
         if col not in raw_input.columns:
             raw_input[col] = 0
-    
+
     data = raw_input[expected_cols]
 
     if st.button("Predict Churn"):
@@ -78,7 +78,7 @@ def prediction_churn():
         churn_label = "Churn" if pred[0] == 1 else "Not Churn"
         churn_prob = round(prob[0][1] * 100, 2)
         not_churn_prob = round(prob[0][0] * 100, 2)
-        
+
         st.subheader("Prediction Results")
         col1, col2 = st.columns(2)
         with col1:
@@ -87,7 +87,7 @@ def prediction_churn():
         with col2:
             st.markdown(f"### **Not Churn Prediction**")
             st.markdown(f'<p style="color:green;">Probability of Not Churn: {not_churn_prob}%</p>', unsafe_allow_html=True)
-        
+
         # Visualize with a Gauge Chart (Speedometer Style)
         fig = go.Figure(go.Indicator(
             mode="gauge+number",
@@ -109,13 +109,18 @@ def prediction_churn():
         raw_input["Not Churn Probability"] = not_churn_prob
         raw_input["Churn Probability"] = churn_prob
         st.session_state.history.append(raw_input)
-    
+
     # Display input history
     st.markdown("#### Input History")
-    if st.session_state.get("history"):  
-        history_df = pd.concat(st.session_state.history, ignore_index=True)
+    if isinstance(st.session_state.history, list) and all(isinstance(df, pd.DataFrame) for df in st.session_state.history):
+        if st.session_state.history:  # Check if the list is not empty
+            history_df = pd.concat(st.session_state.history, ignore_index=True)
+        else:
+            history_df = pd.DataFrame()
     else:
         history_df = pd.DataFrame()
+        st.warning("Warning: `st.session_state.history` contains invalid data and has been reset.")
+
     if not history_df.empty:  
         st.dataframe(history_df)  
     else:
