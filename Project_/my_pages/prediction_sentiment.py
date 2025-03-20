@@ -126,6 +126,12 @@ def prediction_sentiment():
                 st.markdown("#### Prediction History")
                 st.dataframe(history_df, use_container_width=True)
 
+                if "selected_reviews" not in st.session_state:
+                    st.session_state["selected_reviews"] = []
+
+                if "show_reset_button" not in st.session_state:
+                    st.session_state["show_reset_button"] = False
+
                 if st.session_state["selected_reviews"]:
                     st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
                 elif st.session_state["show_reset_button"]:
