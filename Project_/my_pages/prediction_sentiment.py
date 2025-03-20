@@ -10,27 +10,22 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 # Clear Streamlit cache (you can clear cache programmatically here if needed)
 st.cache_data.clear()
 st.cache_resource.clear()
-
-# Download lexicon untuk analisis sentimen
+# Download lexicon
 nltk.download("vader_lexicon")
 
-# Inisialisasi model VADER
 vader_model = SentimentIntensityAnalyzer()
 
-# Fungsi membersihkan teks
 def cleansing_text(text):
     text = re.sub(r"\s+", " ", text).strip()
     text = re.sub(r"http\S+|www\S+", "http", text)
     text = re.sub(r"@\S+", "@user", text)
     return text
 
-# Fungsi prediksi sentimen menggunakan VADER
 def predict_vader(text):
     score = vader_model.polarity_scores(text)
     compound = score["compound"]
     return "Positive" if compound >= 0.05 else "Negative" if compound <= -0.05 else "Neutral"
 
-# Menampilkan hasil prediksi dengan ikon emosi
 def show_prediction_result(sentiment):
     if sentiment == "Positive":
         st.success(f"**Prediction Result:** {sentiment} 😀")
@@ -39,7 +34,6 @@ def show_prediction_result(sentiment):
     else:
         st.error(f"**Prediction Result:** {sentiment} 😡")
 
-# Fungsi utama untuk prediksi sentimen
 def prediction_sentiment():
     st.title("Sentiment Prediction")
     st.info("Model Prediction using **VADER** (lexicon-based)")
@@ -90,10 +84,11 @@ def prediction_sentiment():
 
             st.dataframe(filtered_df[["overall_text"]], height=300)
 
+            available_reviews = filtered_df["overall_text"].unique().tolist()
             st.session_state["selected_reviews"] = st.multiselect(
                 f"Select reviews with {sentiment_label} sentiment:",
-                filtered_df["overall_text"].unique(),
-                default=st.session_state["selected_reviews"]
+                available_reviews,
+                default=[review for review in st.session_state["selected_reviews"] if review in available_reviews]
             )
 
             if st.session_state["selected_reviews"]:
