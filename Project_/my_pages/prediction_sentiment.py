@@ -46,12 +46,14 @@ def prediction_sentiment():
 
     tab1, tab2 = st.tabs(["📊 Default Data", "✍️ Manual Input"])
 
+    # **Pastikan session state history ada**
     if "history" not in st.session_state:
         st.session_state["history"] = []
     
     if "manual_history" not in st.session_state:
         st.session_state["manual_history"] = []
 
+    # Tab pertama: Menggunakan dataset default
     with tab1:
         file_path = "Project_/dataset/ticket_system_review_processed.csv"
 
@@ -69,12 +71,15 @@ def prediction_sentiment():
             st.error("⚠️ The dataset must have a column 'overall_text'.")
             return
 
+        # Membersihkan teks
         df["overall_text"] = df["overall_text"].fillna("").astype(str)
         df["clean_text"] = df["overall_text"].apply(cleansing_text)
         df["predicted_sentiment"] = df["clean_text"].apply(predict_vader)
 
+        # Hapus baris dengan teks kosong
         df = df[df["overall_text"].str.strip() != ""]
 
+        # Fungsi untuk UI berdasarkan kategori sentimen
         def sentiment_tab_ui(sentiment_label):
             filtered_df = df[df["predicted_sentiment"] == sentiment_label]
 
@@ -93,17 +98,18 @@ def prediction_sentiment():
             if selected_reviews:
                 for review in selected_reviews:
                     sentiment_result = predict_vader(review)
+                    # **Cegah duplikasi dalam history**
                     if {"Review": review, "Sentiment": sentiment_result} not in st.session_state["history"]:
                         st.session_state["history"].append({"Review": review, "Sentiment": sentiment_result})
 
-            if st.session_state["history"]:
-                if st.button(f"🔄 Reset History"):
-                    if selected_reviews:
-                        st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
-                    else:
-                        st.session_state["history"] = []
-                        st.rerun()
+            if st.button(f"🔄 Reset History"):
+                if selected_reviews:
+                    st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
+                else:
+                    st.session_state["history"] = []
+                    st.rerun()
 
+        # Menampilkan data berdasarkan sentimen
         tab_pos, tab_neu, tab_neg = st.tabs(["😀 Positive", "😐 Neutral", "😡 Negative"])
 
         with tab_pos:
@@ -115,10 +121,11 @@ def prediction_sentiment():
         with tab_neg:
             sentiment_tab_ui("Negative")
 
+        # **Menampilkan history hanya jika ada data**
         if st.session_state["history"]:
             st.markdown("#### Prediction Results")
 
-            history_df = pd.DataFrame(st.session_state["history"])
+            history_df = pd.DataFrame(st.session_state["history"]) if st.session_state["history"] else pd.DataFrame(columns=["Review", "Sentiment"])
 
             if not history_df.empty:
                 sentiment_counts = history_df["Sentiment"].value_counts().reset_index()
@@ -129,6 +136,11 @@ def prediction_sentiment():
                 st.markdown("#### Prediction History")
                 st.dataframe(history_df, use_container_width=True)
 
+                if st.button("🔄 Reset History"):
+                    st.session_state["history"] = []
+                    st.rerun()
+
+    # Tab kedua: Input manual
     with tab2:
         review_text = st.text_area(
             "Enter your review here:",
@@ -143,20 +155,23 @@ def prediction_sentiment():
                 sentiment_result = predict_vader(clean_text)
                 show_prediction_result(sentiment_result)
 
+                # **Cegah duplikasi dalam manual history**
                 if {"Review": review_text, "Sentiment": sentiment_result} not in st.session_state["manual_history"]:
                     st.session_state["manual_history"].append({"Review": review_text, "Sentiment": sentiment_result})
             else:
                 st.warning("⚠️ Please enter a review before predicting.")
 
+        # **Tampilkan history manual hanya jika ada data**
         if st.session_state["manual_history"]:
             st.markdown("#### Manual Input History")
             manual_df = pd.DataFrame(st.session_state["manual_history"])
+
             st.dataframe(manual_df, use_container_width=True)
 
-            if st.session_state["manual_history"]:
-                if st.button("🔄 Reset History"):
-                    st.session_state["manual_history"] = []
-                    st.rerun()
+            if st.button("🔄 Reset History"):
+                st.session_state["manual_history"] = []
+                st.rerun()
 
+# Jalankan fungsi utama
 if __name__ == "__main__":
     prediction_sentiment()
