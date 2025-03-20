@@ -55,6 +55,9 @@ def prediction_sentiment():
     if "show_reset_button" not in st.session_state:
         st.session_state["show_reset_button"] = False
 
+    if "selected_reviews" not in st.session_state:
+        st.session_state["selected_reviews"] = []
+
     with tab1:
         file_path = "Project_/dataset/ticket_system_review_processed.csv"
 
@@ -78,10 +81,7 @@ def prediction_sentiment():
 
         df = df[df["overall_text"].str.strip() != ""]
 
-        selected_reviews = []
-
         def sentiment_tab_ui(sentiment_label):
-            nonlocal selected_reviews
             filtered_df = df[df["predicted_sentiment"] == sentiment_label]
 
             if filtered_df.empty:
@@ -90,13 +90,14 @@ def prediction_sentiment():
 
             st.dataframe(filtered_df[["overall_text"]], height=300)
 
-            selected_reviews = st.multiselect(
+            st.session_state["selected_reviews"] = st.multiselect(
                 f"Select reviews with {sentiment_label} sentiment:",
                 filtered_df["overall_text"].unique(),
+                default=st.session_state["selected_reviews"]
             )
 
-            if selected_reviews:
-                for review in selected_reviews:
+            if st.session_state["selected_reviews"]:
+                for review in st.session_state["selected_reviews"]:
                     sentiment_result = predict_vader(review)
                     if {"Review": review, "Sentiment": sentiment_result} not in st.session_state["history"]:
                         st.session_state["history"].append({"Review": review, "Sentiment": sentiment_result})
@@ -126,12 +127,13 @@ def prediction_sentiment():
                 st.markdown("#### Prediction History")
                 st.dataframe(history_df, use_container_width=True)
 
-                if selected_reviews:
+                if st.session_state["selected_reviews"]:
                     st.warning("⚠️ Reset is disabled while reviews are selected. Please deselect all reviews first.")
                 elif st.session_state["show_reset_button"]:
                     if st.button("🔄 Reset History"):
                         st.session_state["history"] = []
                         st.session_state["show_reset_button"] = False
+                        st.session_state["selected_reviews"] = []
                         st.rerun()
 
     with tab2:
