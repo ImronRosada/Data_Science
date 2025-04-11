@@ -13,7 +13,7 @@ if "selected_page" not in st.session_state:
 
 # Sidebar navigation
 with st.sidebar:
-    st.image("img/bank.png", width=400)
+    st.image("Bank_Card/img/bank.png", width=400)
     st.title("Bank Credit Card App")
     st.caption("*Customer Analysis and Prediction*")
 
