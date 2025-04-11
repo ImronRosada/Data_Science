@@ -6,7 +6,7 @@ def app():
     st.title("📊 Customer Dashboard - Bank Credit Card")
     
     # Load dataset
-    df_churn = pd.read_csv("dataset/df_churn_review.csv")
+    df_churn = pd.read_csv("Bank_Card/dataset/df_churn_review.csv")
 
     # Preprocessing ringan jika diperlukan
     df_churn["Gender"] = df_churn["Gender"].astype("category").cat.rename_categories({"F": "Female", "M": "Male"})

@@ -12,7 +12,7 @@ def app():
     st.info("Prediction model using **XGBoost** or **SVM** based on credit card customer data.")
 
     model_option = st.radio("Select Model", ["XGBoost", "SVM"], horizontal=True, help="Choose a prediction model to use.")
-    model_path = "models/xgb_model.pkl" if model_option == "XGBoost" else "models/svm_model.pkl"
+    model_path = "Bank_Card/models/xgb_model.pkl" if model_option == "XGBoost" else "Bank_Card/models/svm_model.pkl"
     model = joblib.load(model_path)
 
     if model_option == "XGBoost":
@@ -36,7 +36,7 @@ def app():
             | Churn      | 0.77      | 0.77   | 0.77     |
             """)
 
-    df_ref = pd.read_csv("dataset/df_churn_test_scaled.csv")
+    df_ref = pd.read_csv("Bank_Card/dataset/df_churn_test_scaled.csv")
     expected_cols = [col for col in df_ref.columns if col != "Attrition_Flag"]
 
     if "history" not in st.session_state:
