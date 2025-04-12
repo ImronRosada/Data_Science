@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 import pandas as pd
 import numpy as np
 import joblib
@@ -25,6 +26,14 @@ def app():
             | Not Churn  | 0.99      | 0.96   | 0.98     |
             | Churn      | 0.82      | 0.93   | 0.87     |
             """)
+
+            st.markdown("##### Feature Importance - XGBoost")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.image(Image.open("Bank_Card/img/output1.png"), caption="Top Features", use_container_width=True)
+            with col2:
+                st.image(Image.open("Bank_Card/img/output3.png"), caption="SHAP Summary Plot", use_container_width=True)
+
     else:
         with st.expander("ℹ️ SVM Model Performance"):
             st.markdown("""
@@ -35,6 +44,13 @@ def app():
             | Not Churn  | 0.96      | 0.96   | 0.96     |
             | Churn      | 0.77      | 0.77   | 0.77     |
             """)
+
+            st.markdown("##### Feature Importance - SVM")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.image(Image.open("Bank_Card/img/output2.png"), caption="Top Features", use_container_width=True)
+            with col2:
+                st.image(Image.open("Bank_Card/img/output4.png"), caption="SHAP Summary Plot", use_container_width=True)
 
     df_ref = pd.read_csv("Bank_Card/dataset/df_churn_test_scaled.csv")
     expected_cols = [col for col in df_ref.columns if col != "Attrition_Flag"]
