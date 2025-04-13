@@ -21,10 +21,10 @@ def app():
             st.markdown("""
             This model achieved a high accuracy of **96%** on the test set.  
 
-            | Class      | Precision | Recall | F1-score |
-            |------------|-----------|--------|----------|
-            | Not Churn  | 0.99      | 0.96   | 0.98     |
-            | Churn      | 0.82      | 0.93   | 0.87     |
+            | Class      | Confusion Matrix       | Precision | Recall | F1-score |
+            |------------|------------------------|-----------|--------|----------|
+            | Not Churn  | TN [827] | FP [31]     | 0.99      | 0.96   | 0.98     |
+            | Churn      | FN [11]  | TP [144]    | 0.82      | 0.93   | 0.87     |
             """)
 
             st.markdown("##### Feature Importance and Shapley Additive Explanations (SHAP) - XGBoost")
@@ -39,10 +39,10 @@ def app():
             st.markdown("""
             This model achieved an accuracy of **93%** on the test set.  
 
-            | Class      | Precision | Recall | F1-score |
-            |------------|-----------|--------|----------|
-            | Not Churn  | 0.96      | 0.96   | 0.96     |
-            | Churn      | 0.77      | 0.77   | 0.77     |
+            | Class      | Confusion Matrix       | Precision | Recall | F1-score |
+            |------------|------------------------|-----------|--------|----------|
+            | Not Churn  | TN [822] | FP [36]     | 0.96      | 0.96   | 0.96     |
+            | Churn      | FN [35]  | TP [120]    | 0.77      | 0.77   | 0.77     |
             """)
 
             st.markdown("##### Feature Importance and Shapley Additive Explanations (SHAP) - SVM")
