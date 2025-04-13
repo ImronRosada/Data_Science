@@ -27,7 +27,7 @@ def app():
             | Churn      | 0.82      | 0.93   | 0.87     |
             """)
 
-            st.markdown("##### Feature Importance - XGBoost")
+            st.markdown("##### Feature Importance and Shapley Additive Explanations (SHAP) - XGBoost")
             col1, col2 = st.columns(2)
             with col1:
                 st.image(Image.open("Bank_Card/img/output1.png"), caption="Top Features", use_container_width=True)
@@ -45,7 +45,7 @@ def app():
             | Churn      | 0.77      | 0.77   | 0.77     |
             """)
 
-            st.markdown("##### Feature Importance - SVM")
+            st.markdown("##### Feature Importance and Shapley Additive Explanations (SHAP) - SVM")
             col1, col2 = st.columns(2)
             with col1:
                 st.image(Image.open("Bank_Card/img/output2.png"), caption="Top Features", use_container_width=True)
