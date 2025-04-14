@@ -63,7 +63,7 @@ def app():
         st.markdown("##### b. Age")
         fig = px.histogram(
             df_churn, x="Customer_Age", color="Attrition_Flag", nbins=60,
-            barmode="stack", title="Customer Age Distribution", labels={"Customer_Age": "", "Attrition_Flag": ""},
+            barmode="stack", title="Customer Age Distribution by Churn", labels={"Customer_Age": "", "Attrition_Flag": ""},
             color_discrete_sequence=px.colors.qualitative.Pastel, text_auto=True)
         fig.update_layout(xaxis=dict(tickmode="linear"), template="plotly_white")
         fig.update_yaxes(showticklabels=False, title_text="")
@@ -81,7 +81,7 @@ def app():
         st.markdown("##### d. Marital Status and Dependents")
         data_marital = pd.crosstab([df_churn["Marital_Status"], df_churn["Dependent_count"]], df_churn["Attrition_Flag"]).stack().reset_index()
         data_marital.columns = ["Marital Status", "Dependent Count", "Churn Status", "Count"]
-        fig = px.bar(data_marital, y="Marital Status", x="Count", color="Churn Status", facet_col="Dependent Count", text_auto=True, title="Marital Status & Dependent Count by Churn",
+        fig = px.bar(data_marital, y="Marital Status", x="Count", color="Churn Status", facet_col="Dependent Count", text_auto=True, title="Churn Distribution by Marital Status & Dependent Count",
                     labels={"Count": "Count", "Marital Status": "", "Churn Status": ""}, barmode="stack", color_discrete_sequence=px.colors.qualitative.Set1)
         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[-1]))
         fig.update_xaxes(title_text="")
