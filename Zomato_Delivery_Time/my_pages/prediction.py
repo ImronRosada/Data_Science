@@ -140,7 +140,7 @@ def app():
                 col1, col2 = st.columns([1, 2])
                 with col1:
                     st.markdown("#### Estimated Time")
-                    st.markdown(f"<h3 style='color: black; font-weight:bold;'>{pred_time:.2f} minutes</h3>", 
+                    st.markdown(f"<h3 style='color: orange; font-weight:bold;'>{pred_time:.2f} minutes</h3>", 
                                 unsafe_allow_html=True)
                 with col2:
                     fig = go.Figure(go.Indicator(
